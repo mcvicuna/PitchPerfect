@@ -8,8 +8,21 @@
 
 import Foundation
 
-class RecordedAudio: NSObject{
-    var filePathUrl: NSURL!
+final class RecordedAudio: NSObject{
+    var filePathUrl: NSURL
     var title: String!
+    init(url: NSURL!, title :String!) {
+        filePathUrl = url
+        self.title = title
+    }
+    convenience init(url: NSURL) {
+        self.init()
+        self.filePathUrl = url
+        self.title = url.lastPathComponent
+    }
+    override init() {
+        filePathUrl = NSURL()
+        title = "None"
+    }
 }
 
