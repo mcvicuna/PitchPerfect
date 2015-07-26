@@ -15,6 +15,7 @@ class PlaySoundsViewController: UIViewController {
     
     // internal variables
     var player : AVAudioPlayer!
+    var recordedAudio : RecordedAudio!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +27,10 @@ class PlaySoundsViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    func playSound(soundFilename: String, rate: Float) {
+
+    func playSound(sound: NSURL!, rate: Float) {
         
-        if var sound = NSURL(fileURLWithPath: soundFilename) {
+        if(sound != nil) {
             var error:NSError?
             
             println(sound)
@@ -76,14 +77,14 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func playFast(sender: UIButton) {
         println("playFast")
-        self.playSound(NSBundle.mainBundle().pathForResource("movie_quote", ofType: "mp3")!, rate: 1.5)
+        self.playSound(recordedAudio.filePathUrl, rate: 1.5)
         
         
     }
     
     @IBAction func playSlow(sender: AnyObject) {
         println("playSlow")
-        self.playSound(NSBundle.mainBundle().pathForResource("movie_quote", ofType: "mp3")!, rate: 0.5)
+        self.playSound(recordedAudio.filePathUrl, rate: 0.5)
     }
 
     @IBAction func playStop(sender: UIButton) {
