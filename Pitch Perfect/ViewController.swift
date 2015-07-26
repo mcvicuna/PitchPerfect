@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func stopRecording(sender: UIButton) {
-        println("start recording")
+        println("stop recording")
         recordingLabel.hidden = true
         stopButton.hidden = true
         startButton.enabled = true
