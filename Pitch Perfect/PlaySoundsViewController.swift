@@ -25,21 +25,11 @@ class PlaySoundsViewController: UIViewController {
     @IBOutlet weak var stopButton: UIButton!
     
     // internal variables
-    var engine : AVAudioEngine!
-    var recordedAudio : RecordedAudio!
-    var player : AVAudioPlayerNode!
+    var engine : AVAudioEngine?
+    var recordedAudio : RecordedAudio?
+    var player : AVAudioPlayerNode?
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
 
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     func playSound(sound: AVAudioFile!, nodes: [AVAudioNode]) {
         
@@ -67,28 +57,31 @@ class PlaySoundsViewController: UIViewController {
             
             engine = AVAudioEngine()
             player = AVAudioPlayerNode()
-            engine.attachNode(player)
-            
-            // initialize the last node to
-            var lastNode: AVAudioNode! = player
-            
-            for currentNode in nodes {
-                engine.attachNode(currentNode)
-                engine.connect(lastNode, to: currentNode, format: nil)
-                lastNode = currentNode
-            }
-            
-            engine.connect(lastNode!, to: engine.outputNode, format: nil)
-            
-            player.scheduleFile(sound, atTime: nil, completionHandler: nil)
-            engine.startAndReturnError(&error)
-            if let error = error {
-                println(error)
-            }
-            else {
-                stopButton.enabled = true
+            if let engine = engine {
                 
-                player.play()
+                engine.attachNode(player)
+                
+                // initialize the last node to
+                var lastNode: AVAudioNode! = player
+                
+                for currentNode in nodes {
+                    engine.attachNode(currentNode)
+                    engine.connect(lastNode, to: currentNode, format: nil)
+                    lastNode = currentNode
+                }
+                
+                engine.connect(lastNode!, to: engine.outputNode, format: nil)
+                
+                player?.scheduleFile(sound, atTime: nil, completionHandler: nil)
+                engine.startAndReturnError(&error)
+                if let error = error {
+                    println(error)
+                }
+                else {
+                    stopButton.enabled = true
+                    
+                    player?.play()
+                }
             }
         }
         else {
@@ -100,24 +93,24 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func playChipmunk(sender: UIButton) {
         println("chipmunk")
-        playSound(AVAudioFile(forReading: recordedAudio.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(pitch: 1000.0)])
+        playSound(AVAudioFile(forReading: recordedAudio?.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(pitch: 1000.0)])
     }
     
     @IBAction func playDarth(sender: UIButton) {
         println("darth")
-        playSound(AVAudioFile(forReading: recordedAudio.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(pitch: -1000.0)])
+        playSound(AVAudioFile(forReading: recordedAudio?.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(pitch: -1000.0)])
     }
     
     @IBAction func playFast(sender: UIButton) {
         println("playFast")
-        playSound(AVAudioFile(forReading: recordedAudio.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(rate: 1.5)])
+        playSound(AVAudioFile(forReading: recordedAudio?.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(rate: 1.5)])
         
         
     }
     
     @IBAction func playSlow(sender: AnyObject) {
         println("playSlow")
-            playSound(AVAudioFile(forReading: recordedAudio.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(rate: 0.5)])
+            playSound(AVAudioFile(forReading: recordedAudio?.filePathUrl, error: nil), nodes: [AVAudioUnitTimePitch(rate: 0.5)])
         
     }
 
@@ -126,14 +119,5 @@ class PlaySoundsViewController: UIViewController {
         player?.stop()
         engine?.stop()
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
